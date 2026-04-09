@@ -3,6 +3,7 @@ package main
 import (
 	"MarketPlace/config"
 	"MarketPlace/handlers"
+	"MarketPlace/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,19 +13,26 @@ func main() {
 
 	r := gin.Default()
 
-	r.GET("/users", handlers.GetUsers)
-	r.POST("/users", handlers.AddUser)
-	r.DELETE("/users/:id", handlers.DeleteUser)
+	r.POST("/register", handlers.Register)
+	r.POST("/login", handlers.Login)
 
-	r.GET("/categories", handlers.GetCategories)
-	r.POST("/categories", handlers.AddCategory)
-	r.DELETE("/categories/:id", handlers.DeleteCategory)
+	protected := r.Group("/")
+	protected.Use(middleware.AuthMiddleware())
+	{
+		protected.GET("/products", handlers.GetProducts)
+		protected.POST("/products", handlers.AddProduct)
+		protected.GET("/products/:id", handlers.GetProductByID)
+		protected.PUT("/products/:id", handlers.UpdateProduct)
+		protected.DELETE("/products/:id", handlers.DeleteProduct)
 
-	r.GET("/products", handlers.GetProducts)
-	r.POST("/products", handlers.AddProduct)
-	r.GET("/products/:id", handlers.GetProductByID)
-	r.PUT("/products/:id", handlers.UpdateProduct)
-	r.DELETE("/products/:id", handlers.DeleteProduct)
+		protected.GET("/categories", handlers.GetCategories)
+		protected.POST("/categories", handlers.AddCategory)
+		protected.DELETE("/categories/:id", handlers.DeleteCategory)
 
+		protected.GET("/users", handlers.GetUsers)
+		protected.DELETE("/users/:id", handlers.DeleteUser)
+	}
+
+	// Запуск сервера
 	r.Run(":8080")
 }

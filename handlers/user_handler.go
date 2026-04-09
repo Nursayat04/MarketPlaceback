@@ -17,27 +17,6 @@ func GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-func AddUser(c *gin.Context) {
-	var user models.User
-
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
-
-	if user.Name == "" || user.Email == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Name and email are required"})
-		return
-	}
-
-	if err := config.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add user"})
-		return
-	}
-
-	c.JSON(http.StatusCreated, user)
-}
-
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	result := config.DB.Delete(&models.User{}, id)
