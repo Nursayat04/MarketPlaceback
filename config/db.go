@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"MarketPlace/models"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,7 +17,6 @@ func ConnectDatabase() {
 	if err != nil {
 		log.Fatal("Failed to connect database:", err)
 	}
-	database.AutoMigrate(&models.User{}, &models.Category{}, &models.Product{})
 
 	DB = database
 	fmt.Println("Database connected successfully")
