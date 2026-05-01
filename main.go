@@ -31,6 +31,10 @@ func main() {
 
 		protected.GET("/users", handlers.GetUsers)
 		protected.DELETE("/users/:id", handlers.DeleteUser)
+
+		protected.GET("/products/:id/reviews", handlers.GetProductReviews)
+		protected.POST("/products/:id/reviews", handlers.AddProductReview)
+		protected.DELETE("/reviews/:id", handlers.DeleteProductReview)
 	}
 
 	// Запуск сервера
