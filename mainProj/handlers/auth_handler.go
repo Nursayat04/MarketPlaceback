@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"MarketPlace/config"
-	"MarketPlace/models"
+	"MarketPlace/mainProj/config"
+	"MarketPlace/mainProj/models"
 	"net/http"
 	"time"
 

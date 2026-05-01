@@ -11,7 +11,7 @@ import (
 
 var db *gorm.DB
 
-// SetDB вызывается из main.go для передачи подключения к БД
+// SetDB вызывается из mainProj.go для передачи подключения к БД
 func SetDB(database *gorm.DB) {
 	db = database
 }

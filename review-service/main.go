@@ -2,6 +2,7 @@ package main
 
 import (
 	"MarketPlace/review-service/handlers"
+	"MarketPlace/review-service/models"
 	"fmt"
 	"log"
 
@@ -13,16 +14,21 @@ import (
 var DB *gorm.DB
 
 func connectDatabase() {
-	dsn := "host=localhost user=postgres password=postgres dbname=reviews_db port=5432 sslmode=disable"
+	dsn := "host=localhost user=postgres password=postgres dbname=reviews port=5432 sslmode=disable"
 
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect database:", err)
 	}
 
+	err = database.AutoMigrate(&models.Review{})
+	if err != nil {
+		log.Fatal("Failed to migrate database:", err)
+	}
+
 	DB = database
 	handlers.SetDB(DB)
-	fmt.Println("ReviewService: Database connected successfully")
+	fmt.Println("ReviewService: Database connected and table created successfully")
 }
 
 func main() {

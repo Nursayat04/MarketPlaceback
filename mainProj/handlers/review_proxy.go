@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"MarketPlace/clients"
+	"MarketPlace/mainProj/clients"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +32,14 @@ func GetProductReviews(c *gin.Context) {
 
 // POST /products/:id/reviews
 func AddProductReview(c *gin.Context) {
-	productID := c.Param("id")
+	productIDStr := c.Param("id") // Это строка "3"
+
+	// 1. Конвертируем строку в число
+	productID, err := strconv.Atoi(productIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	}
 
 	var input map[string]interface{}
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -39,21 +47,18 @@ func AddProductReview(c *gin.Context) {
 		return
 	}
 
+	// 2. Кладем в map ЧИСЛО, а не строку
 	input["product_id"] = productID
 
+	// 3. Отправляем в Review Service
 	result, err := reviewClient.AddReview(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add review"})
 		return
 	}
 
-	var data interface{}
-	if err := json.Unmarshal([]byte(result), &data); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid response from ReviewService"})
-		return
-	}
-
-	c.JSON(http.StatusCreated, data)
+	// (Дополнительно) Проверь, чтобы ты не возвращал 201, если в result есть ошибка
+	c.JSON(http.StatusCreated, result)
 }
 
 // DELETE /reviews/:id
