@@ -8,6 +8,6 @@ type Review struct {
 	ProductID  uint   `json:"product_id"`
 	UserID     uint   `json:"user_id"`
 	Username   string `json:"username"`
-	Rating     int    `json:"rating"` // 1–5
+	Rating     int    `json:"rating"`
 	Comment    string `json:"comment"`
 }

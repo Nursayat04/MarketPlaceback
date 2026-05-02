@@ -4,13 +4,18 @@ import (
 	"MarketPlace/mainProj/config"
 	handlers2 "MarketPlace/mainProj/handlers"
 	"MarketPlace/mainProj/middleware"
+	"MarketPlace/mainProj/models"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	config.ConnectDatabase()
-
+	err := config.DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Category{})
+	if err != nil {
+		fmt.Println("Migration failed:", err)
+	}
 	r := gin.Default()
 
 	r.POST("/register", handlers2.Register)

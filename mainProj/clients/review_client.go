@@ -15,13 +15,11 @@ type ReviewClient struct {
 func NewReviewClient() *ReviewClient {
 	client := resty.New()
 
-	// Middleware: лог каждого запроса
 	client.OnBeforeRequest(func(c *resty.Client, req *resty.Request) error {
 		log.Printf("[ReviewClient] --> %s %s", req.Method, req.URL)
 		return nil
 	})
 
-	// Middleware: лог каждого ответа
 	client.OnAfterResponse(func(c *resty.Client, resp *resty.Response) error {
 		log.Printf("[ReviewClient] <-- %d %s", resp.StatusCode(), resp.Request.URL)
 		return nil
@@ -29,7 +27,7 @@ func NewReviewClient() *ReviewClient {
 
 	return &ReviewClient{
 		client:  client,
-		baseURL: "http://localhost:8081",
+		baseURL: "http://review-app:8081",
 	}
 }
 
